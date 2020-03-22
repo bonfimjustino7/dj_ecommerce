@@ -1,0 +1,4 @@
+venv
+*__pyc__.py
+db.sqlite3
+media
