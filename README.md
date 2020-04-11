@@ -5,3 +5,5 @@ Um sistema que de compras usando o framework web Django e outras libs que vão a
  - Terá acaompanhamento de suas vendas, através de uma interface admin.
  - O sistema fornece várias formas de pagamentos: picpay, pagseguro, paypal, mercadopago.
  - Envio de emails.
+ - Exportação de Planilhas.
+ - Exportação de Relatórios PDF.
