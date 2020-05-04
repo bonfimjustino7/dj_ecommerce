@@ -31,8 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_tools',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
     'poweradmin',
     'django.contrib.admin',
+    'smart_selects',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,6 +46,9 @@ INSTALLED_APPS = [
     'core',
     'ckeditor',
     'ckeditor_uploader',
+    'django_mptt_admin',
+    'mptt',
+
 ]
 
 MIDDLEWARE = [
@@ -57,10 +65,10 @@ ROOT_URLCONF = 'dj_ecommerce.urls'
 
 TEMPLATES = [
     {
+
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
-        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'APP_DIRS': False,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -68,6 +76,11 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                'admin_tools.template_loaders.Loader',
+            ]
         },
     },
 ]
@@ -118,7 +131,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SITE_NAME = 'DJ Ecommerce'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -208,3 +220,8 @@ CKEDITOR_CONFIGS = {
         ],
     },
 }
+
+#Admin-Tools
+ADMIN_TOOLS_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'dashboard.CustomAppIndexDashboard'
+ADMIN_TOOLS_MENU = 'menu.CustomMenu'

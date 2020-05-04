@@ -1,0 +1,36 @@
+{% extends "admin:admin/base.html" %}
+{% load static %}
+{% load theming_tags %}
+{% block extrastyle %}
+    <style type="text/css">
+        #bookmark-button{
+            display: none!important;
+        }
+        .dashboard-module h3{
+            display: none!important;
+        }
+        #header {
+            background: #205067;
+
+        /* Reset the indents of django-flat-theme
+          (need to restore 40px on branding+user-tools instead) */
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    #header #branding h1 {
+        margin: 0;
+        padding: 5px 10px;
+        text-indent: 10px!important;
+        {#background: transparent url(../images/django.png) 10px 5px no-repeat;#}
+        background: none!important;
+        height: 31px;
+        width: auto!important;
+    }
+    </style>
+{% endblock %}
+{% block blockbots %}
+    {{ block.super }}
+    {# Using blockbots ensures theming css comes after any form media and other css #}
+    {% render_theming_css %}
+{% endblock %}
