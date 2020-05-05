@@ -1,0 +1,14 @@
+<a class="dropdown-item dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ c.name }}</a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown1">
+        {% for cc in c.children.all %}
+            <li class="nav-item dropdown">
+                {% if cc.children.exists %}
+                    {% with c=cc template="includes/template.html" %}
+                        {% include template %}
+                    {% endwith %}
+                {% else %}
+                    <a href="{{ cc.get_link|default:"#" }}" class="dropdown-item">{{ cc }}</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>

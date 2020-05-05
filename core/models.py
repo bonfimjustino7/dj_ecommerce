@@ -2,6 +2,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.urls import reverse
+from django.utils.html import strip_tags
 from mptt.models import MPTTModel, TreeForeignKey
 
 from smart_selects.db_fields import ChainedForeignKey
@@ -20,6 +22,19 @@ class Section(models.Model):
     class Meta:
         verbose_name = 'Sessão'
         verbose_name_plural = 'Sessões'
+
+    def have_perm(self, user):
+        if not self.permissao_set.count():
+            return True
+        if user.is_superuser:
+            return True
+        if user.groups.filter(pk__in=self.permissao_set.values_list('pk', flat=True)).exists():
+            return True
+        return False
+
+    def get_absolute_url(self):
+        # return reverse('section', kwargs={'slug': self.slug})
+        return ''
 
     def __str__(self):
         return self.title
@@ -47,6 +62,22 @@ class Article(models.Model):
         images = self.get_images()
         if images:
             return images[0]
+
+    def have_perm(self, user):
+        if user.is_superuser or not self.sections.count():
+            return True
+        for section in self.sections.all():
+            if not section.permissao_set.count():
+                return True
+            if not user.groups.filter(pk__in=section.permissao_set.values_list('pk', flat=True)).exists():
+                return False
+        return True
+
+    def get_absolute_url(self):
+        # if str(self.pk) == self.slug:
+        #     return strip_tags(self.content)
+        # return reverse('article', kwargs={'slug': self.slug})
+        return ''
 
 class Tags(models.Model):
     title = models.CharField('Nome', max_length=100)
@@ -102,3 +133,16 @@ class Menu(MPTTModel):
         elif self.section:
             link = self.section.get_absolute_url()
         return link
+
+    def have_perm(self, user):
+        if self.parent:
+            return self.parent.have_perm(user)
+        if self.section:
+            return self.section.have_perm(user)
+        if self.article:
+            return self.article.have_perm(user)
+        return True
+
+    @property
+    def title_for_admin(self):
+        return '%s %s' % (self.pk, self.name)

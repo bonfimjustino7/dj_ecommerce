@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django_mptt_admin.admin import DjangoMpttAdmin
+from mptt.admin import MPTTModelAdmin
 
 from core.models import *
 from poweradmin.admin import *
@@ -28,3 +29,4 @@ class ArticleAdmin(PowerModelAdmin):
 class MenuAdmin(DjangoMpttAdmin):
     list_display = ('name', 'is_active',)
     list_editable = ('is_active',)
+    item_label_field_name = 'title_for_admin'
