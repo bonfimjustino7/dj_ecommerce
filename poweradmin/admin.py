@@ -14,7 +14,7 @@ import json
 
 from django.contrib.auth import get_permission_codename
 
-from .actions import export_as_csv_action, delete_selected, report_action
+from .actions import export_as_csv_action, report_action
 
 
 '''
@@ -128,7 +128,7 @@ class PowerModelAdmin(admin.ModelAdmin):
         actions['report'] = (report, 'report', report.short_description)
 
         #Ajustes no log do action delete_selected
-        actions['delete_selected'] = (delete_selected, 'delete_selected', delete_selected.short_description)
+        #actions['delete_selected'] = (delete_selected, 'delete_selected', delete_selected.short_description)
         return actions
 
     def render_change_form(self, request, context, add=False, change=False, form_url='', obj=None):
