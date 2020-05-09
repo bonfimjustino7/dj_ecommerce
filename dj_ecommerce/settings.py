@@ -43,12 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core',
     'ckeditor',
     'ckeditor_uploader',
     'django_mptt_admin',
     'mptt',
-
+    'core',
+    'estoque',
 ]
 
 MIDDLEWARE = [

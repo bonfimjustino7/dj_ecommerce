@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.html import strip_tags
 from mptt.models import MPTTModel, TreeForeignKey
 
+from estoque.models import Produto
 from smart_selects.db_fields import ChainedForeignKey
 
 class ItemManager(models.Manager):
@@ -40,16 +41,6 @@ class Section(models.Model):
 
     def __str__(self):
         return self.title
-
-class Produto(models.Model):
-    name = models.CharField('Nome', max_length=200)
-    preco = models.DecimalField('Preço', decimal_places=2, max_digits=10)
-    descricao = models.TextField('Descrição', blank=True, null=True)
-    qtd_estoque = models.IntegerField('Quantidade em Estoque', default=0)
-
-    def __str__(self):
-        return self.name
-
 
 class Article(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Autor')
@@ -111,15 +102,6 @@ class Tags(models.Model):
         verbose_name = 'Tag (Palavras Chaves)'
         verbose_name_plural = 'Tags (Palavras Chaves)'
 
-class Compra(models.Model):
-    produto = models.ForeignKey(Article, on_delete=models.PROTECT)
-    quantidade = models.IntegerField()
-    comprador = models.ForeignKey(User, on_delete=models.PROTECT)
-    date_compra = models.DateTimeField('Data da Compra', auto_now_add=True)
-
-    @property
-    def valor_total(self):
-        return self.produto.preco * self.quantidade
 
 class Menu(MPTTModel):
     name = models.CharField(u'Nome', max_length=50)

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 
 from core.models import Article
 
@@ -14,5 +14,6 @@ class HomeView(TemplateView):
         kwargs['products'] = posts
         return kwargs
 
-class ArticleView(TemplateView):
-    template_name = 'index.html'
+class ArticleView(DetailView):
+    template_name = 'detail_product.html'
+    model = Article
