@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -6,7 +7,17 @@ from django.db import models
 class Produto(models.Model):
     name = models.CharField('Nome', max_length=200)
     preco = models.DecimalField('Preço', decimal_places=2, max_digits=10)
-    descricao = models.TextField('Descrição', blank=True, null=True)
+    descricao = models.TextField('Descrição Curta', blank=True, null=True)
+    # detalhes
+    marca = models.CharField(max_length=100, null=True, blank=True)
+    modelo = models.CharField(max_length=100, null=True, blank=True)
+
+    def produtos_estoque(self):
+        count = 0
+        for mov in self.movimentacao_set.all():
+            count += mov.quantidade
+        return count
+    produtos_estoque.short_description = 'Produtos em Estoque'
 
     def __str__(self):
         return self.name
@@ -23,10 +34,10 @@ class Compra(models.Model):
 
 
 TIPO = (
-    ('Entrada', 'Entrada'),
-    ('Saída', 'Saída'),
-    ('Estorno Entrada', 'Estorno Entrada'),
-    ('Estorno Saída', 'Estorno Saída'),
+    ('Entrada', 'E'),
+    ('Saída', 'S'),
+    ('Estorno Entrada', 'EE'),
+    ('Estorno Saída', 'ES'),
 )
 
 class TipoMovimentacao(models.Model):
@@ -40,8 +51,9 @@ class TipoMovimentacao(models.Model):
 class Movimentacao(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
     tipo = models.ForeignKey(TipoMovimentacao, on_delete=models.PROTECT, verbose_name='Tipo de Movimentação')
-    quantidade = models.IntegerField('Quantidade em estoque')
+    quantidade = models.IntegerField('Quantidade Adicionada')
     dt_movimentacao = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
 
     def __str__(self):
         return '%s - %s %s_%s' % (self.produto, self.tipo, self.quantidade, self.dt_movimentacao)
