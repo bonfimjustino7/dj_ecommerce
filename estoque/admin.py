@@ -48,3 +48,7 @@ class MovimentacaoAdmin(PowerModelAdmin):
 @admin.register(TipoMovimentacao)
 class TipoMovAdmin(PowerModelAdmin):
     pass
+
+@admin.register(Categoria)
+class CategoriaAdmin(PowerModelAdmin):
+    list_display = ('nome', 'qtd_produtos',)

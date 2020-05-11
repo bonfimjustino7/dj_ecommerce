@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-
 class Produto(models.Model):
     name = models.CharField('Nome', max_length=200)
     preco = models.DecimalField('Preço', decimal_places=2, max_digits=10)
     descricao = models.TextField('Descrição Curta', blank=True, null=True)
-    # detalhes
+    categoria = models.ForeignKey('Categoria', on_delete=models.PROTECT, null=True, blank=True)
+    imagem = models.ImageField(upload_to='imgs', null=True, blank=True)
     marca = models.CharField(max_length=100, null=True, blank=True)
     modelo = models.CharField(max_length=100, null=True, blank=True)
 
@@ -21,6 +21,16 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.name
+
+class Categoria(models.Model):
+    nome = models.CharField(max_length=100)
+
+    def qtd_produtos(self):
+        return self.produto_set.all().count()
+    qtd_produtos.short_description = 'Quantidade de Produtos'
+
+    def __str__(self):
+        return self.nome
 
 class Compra(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.PROTECT)

@@ -32,16 +32,23 @@ class ArticleAdmin(PowerModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
     def save_model(self, request, obj, form, change):
-        pre_content = '<h2>%s</h2><img src="/static/img/default.jpg" style="height:150px; width:150px"/><p><b>Descrição: </b>%s</p><span><b>Preço:</b>%s</span>' % (obj.produto.name, obj.produto.descricao, obj.produto.preco)
-        obj.author = request.user
-        #obj.slug = slugify(obj.title)
-        if obj.content == '' or obj.content is None:
-            obj.content = pre_content
-        if obj.header == '' or obj.header is None:
-            obj.header = pre_content
-        if obj.publicated:
-            obj.dt_publication = datetime.now()
-        obj.save()
+        if obj.produto:
+            if obj.produto.imagem:
+                imagem = obj.produto.imagem.url
+            else:
+                imagem = '/static/img/default.jpg'
+
+            pre_content = '<h2>%s</h2><img src="%s" style="height:150px; width:150px"/><p><b>Descrição: </b>%s</p><span><b>Preço:</b>%s</span>' % (
+            obj.produto.name, imagem, obj.produto.descricao, obj.produto.preco)
+            obj.author = request.user
+            #obj.slug = slugify(obj.title)
+            if obj.content == '' or obj.content is None:
+                obj.content = pre_content
+            if obj.header == '' or obj.header is None:
+                obj.header = '<img src="%s" />' % imagem
+            if obj.publicated:
+                obj.dt_publication = datetime.now()
+            obj.save()
 
         return super().save_model(request, obj, form, change)
 
